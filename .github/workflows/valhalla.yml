@@ -11,17 +11,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: SSH
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
  
@@ -32,8 +22,6 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
       - name: Terraform Plan
         id: plan
